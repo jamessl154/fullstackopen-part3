@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
     { 
       "id": 1,
@@ -42,6 +44,42 @@ app.get('/api/persons/:id', (request, response) => {
 app.get('/info', (request, response) => {
     const number = persons.length
     response.send(`<p>Phonebook has info for ${number} people</p> <p>${new Date()}</p>`)
+})
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (!body.name || !body.number) {
+    return response.status(400).json({ 
+      error: 'name or number missing'
+    })
+  }
+
+  if (persons.find(x => x.name.toUpperCase() === body.name.toUpperCase())) {
+    return response.status(400).json({
+      error: `${body.name} already exists in the phonebook`
+    })
+  }
+
+  const person = {
+    id: getRandomInt(100),
+    name: body.name,
+    number: body.number
+  }
+
+  persons = persons.concat(person)
+  response.json(person)
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id !== id)
+    response.status(204).end()
 })
 
 const PORT = 3001
