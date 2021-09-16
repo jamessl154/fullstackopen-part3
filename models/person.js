@@ -32,6 +32,7 @@ personSchema.set('toJSON', {
     }
   })
 
-// 1st param name of model, lowercase plural is name of colection
-// 2nd param schema in variable
+// The variable assigned mongoose.model becomes a constructor function
+// that creates a new JS object based on params
+// inheriting all properties and methods including save(), find() e.t.c.
 module.exports = mongoose.model('Person', personSchema)

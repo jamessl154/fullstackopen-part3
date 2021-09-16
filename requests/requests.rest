@@ -1,4 +1,4 @@
-DELETE http://localhost:3001/api/persons/6143489dced2784a382bcaf9eqweqweeq
+DELETE http://localhost:3001/api/persons/61431eefb66b7d7444725cbf
 ###
 POST http://localhost:3001/api/persons
 content-type: application/json
@@ -12,3 +12,11 @@ content-type: application/json
 GET http://localhost:3001/api/persons/5c41c90e84d891c15dfa3431
 ### Get all
 GET http://localhost:3001/api/persons
+### Update phone number
+PUT http://localhost:3001/api/persons/61434896ced2784a382bcaf7
+content-type: application/json
+
+{
+    "name": "some",
+    "number": "456"
+}

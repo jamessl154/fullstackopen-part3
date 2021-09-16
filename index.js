@@ -79,8 +79,8 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-// if (Person.find({ name: body.name }))
-// TODO test entries for same name, collation : strength in mongoose schema
+  // if (Person.find({ name: body.name }))
+  // TODO test entries for same name, collation : strength in mongoose schema
 
   const person = new Person({
     name: body.name,
@@ -102,6 +102,25 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
+app.put("/api/persons/:id", (request, response) => {
+  // body of the request
+  const body = request.body
+  // Pass a regular object, with updated values
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  // { new: true } changes the return of findByIdAndUpdate() 
+  // to the updated object rather than the initial query
+  Person
+    .findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedNumber => {
+      response.json(updatedNumber)
+    })
+    .catch(error => next(error))
+})
+
 // ENDING MIDDLEWARE order important
 
 // custom Middleware
@@ -112,11 +131,13 @@ const unknownEndpoint = (request, response) => {
 
 // If a request doesn't match any of the
 // HTTP method/route combinations defined above
-// this middleware terminates the request-response cycle
+// this middleware gets called
+// and terminates the request-response cycle
 // by calling res.send()
 // https://expressjs.com/en/guide/routing.html
 
 // must come after all routes and before errorhandler middleware
+// because it responds to any request with - 404 unknown endpoint
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
