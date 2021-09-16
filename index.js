@@ -1,65 +1,64 @@
+require('dotenv').config()
+// Import express module
 const express = require('express')
+// create express application
 const app = express()
-const morgan = require('morgan')
-const cors = require('cors')
+// from ./models/person.js, imports our mongoose model, 
+// which represents the persons collection in mongoDB
+// into Person variable
+const Person = require('./models/person')
 
+// Middleware, HTTP request logger https://github.com/expressjs/morgan
+// can log to console or other files
+const morgan = require('morgan')
+
+// Middleware, Cross-Origin Resource Sharing
+// https://github.com/expressjs/cors
+const cors = require('cors')
+// allow all requests made to this server
 app.use(cors())
+
+// Middleware, incoming requests are automatically converted to JSON Objects
+// used here so we can access body of request
 app.use(express.json())
+
+// Middleware, serves static files in this case the build copied
+// from our frontend repository
+// https://expressjs.com/en/starter/static-files.html
 app.use(express.static('build'))
 
-morgan.token('body', function(req, res) { 
-  return JSON.stringify(req.body, null, 2)
+// create custom token for logging, here using app.use(express.json()) 
+// to access body from the requests JSON object
+morgan.token('body', function(request, response) {
+  return JSON.stringify(request.body, null, 2)
 })
 
+// custom formatting for morgan
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
+// Model.find(), mongoose model (collection) method, {} === all
 app.get('/api/persons', (request, response) => {
+  Person.find({}).then(persons => {
     response.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(x => x.id === id)
-
-    if (person) {
+    Person
+    .findById(request.params.id)
+    .then(person => {
+      if (person){
         response.json(person)
-    } else {
+      } else {
         response.status(404).end()
-    }
+      }
+    })
 })
 
 app.get('/info', (request, response) => {
     const number = persons.length
     response.send(`<p>Phonebook has info for ${number} people</p> <p>${new Date()}</p>`)
 })
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
@@ -70,20 +69,18 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  if (persons.find(x => x.name.toUpperCase() === body.name.toUpperCase())) {
-    return response.status(400).json({
-      error: `${body.name} already exists in the phonebook`
-    })
-  }
 
-  const person = {
-    id: getRandomInt(100),
+// if (Person.find({ name: body.name }))
+// TODO test entries for same name, collation : strength in mongoose schema
+
+  const person = new Person({
     name: body.name,
     number: body.number
-  }
+  })
 
-  persons = persons.concat(person)
-  response.json(person)
+  person.save().then(newEntry => {
+    response.json(newEntry)
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {

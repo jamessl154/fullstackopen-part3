@@ -1,11 +1,11 @@
-DELETE https://hidden-shore-67603.herokuapp.com/api/persons/97
+DELETE http://localhost:3001/api/persons/97
 content-type: application/json
 
 ###
-POST https://hidden-shore-67603.herokuapp.com/api/persons
+POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "newName",
-    "number": "newNumber"
+    "name": "test",
+    "number": "123"
 }
