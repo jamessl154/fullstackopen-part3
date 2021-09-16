@@ -9,7 +9,7 @@ content-type: application/json
 }
 
 ### Get one
-GET http://localhost:3001/api/persons/5c41c90e84d891c15dfa3431
+GET http://localhost:3001/api/persons/61434896ced2784a382bcaf7
 ### Get all
 GET http://localhost:3001/api/persons
 ### Update phone number
@@ -20,3 +20,6 @@ content-type: application/json
     "name": "some",
     "number": "456"
 }
+
+###
+GET http://localhost:3001/info

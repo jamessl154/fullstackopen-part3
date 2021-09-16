@@ -42,9 +42,11 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 // Model.find(), mongoose model (collection) method, {} === all
 app.get('/api/persons', (request, response) => {
-  Person.find({}).then(persons => {
-    response.json(persons)
-  })
+  Person
+    .find({})
+    .then(persons => {
+      response.json(persons)
+    })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -66,8 +68,12 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 app.get('/info', (request, response) => {
-    const number = persons.length
-    response.send(`<p>Phonebook has info for ${number} people</p> <p>${new Date()}</p>`)
+  Person
+    .find({})
+    .then(persons => {
+      let totalPeople = persons.length
+      response.send(`<p>This phonebook has ${totalPeople} people</p> <p>${new Date()}</p>`)
+    })
 })
 
 app.post('/api/persons', (request, response) => {
