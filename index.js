@@ -78,10 +78,7 @@ app.get('/info', (request, response) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-
-  // if (Person.find({ name: body.name }))
-  // TODO test entries for same name, collation : strength in mongoose schema
-
+  
   const person = new Person({
     name: body.name,
     number: body.number
@@ -92,10 +89,7 @@ app.post('/api/persons', (request, response, next) => {
     .then(newEntry => {
       response.json(newEntry)
     })
-    .catch(error => {
-        console.log(error)
-        next(error)
-    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -152,8 +146,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } else if (error.name === 'ValidationErorr') {
-    return response.status(400).json({ error: error.message })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: error.message })
   }
 
   next(error)
