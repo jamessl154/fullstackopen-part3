@@ -76,14 +76,8 @@ app.get('/info', (request, response) => {
     })
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
-
-  if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'name or number missing'
-    })
-  }
 
   // if (Person.find({ name: body.name }))
   // TODO test entries for same name, collation : strength in mongoose schema
@@ -93,9 +87,15 @@ app.post('/api/persons', (request, response) => {
     number: body.number
   })
 
-  person.save().then(newEntry => {
-    response.json(newEntry)
-  })
+  person
+    .save()
+    .then(newEntry => {
+      response.json(newEntry)
+    })
+    .catch(error => {
+        console.log(error)
+        next(error)
+    })
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -152,6 +152,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationErorr') {
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)

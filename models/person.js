@@ -17,8 +17,14 @@ mongoose.connect(url)
 // Mongoose schema. Athough not necessary for mongoDB
 // these schemas make our collections of documents more structured
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    required: true
+  },
+  number: {
+    type: String,
+    required: true
+  }
 })
 
 // removes default _id and __v, creates .id from __id as a string
