@@ -9,11 +9,11 @@ content-type: application/json
 }
 
 ### Get one
-GET http://localhost:3001/api/persons/614480e70b6c9bb673764e2c
+GET http://localhost:3001/api/persons/5c41c90e84d891c15dfa3431
 ### Get all
 GET http://localhost:3001/api/persons
 ### Update phone number
-PUT http://localhost:3001/api/persons/614480e70b6c9bb673764e2c
+PUT http://localhost:3001/api/persons/614480e70b6312373764e2c
 content-type: application/json
 
 {

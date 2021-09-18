@@ -120,12 +120,20 @@ app.put("/api/persons/:id", (request, response, next) => {
   Person
     .findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true })
     .then(updatedNumber => {
-      response.json(updatedNumber)
+      // The server responds 200 null when updating non-existent resources
+      // which is not ideal for error checking on the frontend
+      // null is falsy and evaluates to false
+      if (updatedNumber) {
+        response.json(updatedNumber)
+      } else {
+        // correct format but not found
+        response.status(404).end()
+      }
     })
     .catch(error => next(error))
 })
 
-// ENDING MIDDLEWARE order important
+/// ENDING MIDDLEWARE order important
 
 // custom Middleware
 // just a function that has access to the request/response objects and next()
