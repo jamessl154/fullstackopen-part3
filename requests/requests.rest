@@ -1,6 +1,6 @@
-DELETE http://localhost:3001/api/persons/61431eefb66b7d7444725cbf
+DELETE https://hidden-shore-67603.herokuapp.com/api/persons/6145db34cab202c94510d927
 ###
-POST http://localhost:3001/api/persons
+POST https://hidden-shore-67603.herokuapp.com/api/persons
 content-type: application/json
 
 {
@@ -9,11 +9,11 @@ content-type: application/json
 }
 
 ### Get one
-GET http://localhost:3001/api/persons/5c41c90e84d891c15dfa3431
+GET https://hidden-shore-67603.herokuapp.com/api/persons/6145db20cab202c94510d91d
 ### Get all
-GET http://localhost:3001/api/persons
+GET https://hidden-shore-67603.herokuapp.com/api/persons
 ### Update phone number
-PUT http://localhost:3001/api/persons/614480e70b6312373764e2c
+PUT https://hidden-shore-67603.herokuapp.com/api/persons/6145db20cab202c94510d91d
 content-type: application/json
 
 {
@@ -21,4 +21,4 @@ content-type: application/json
 }
 
 ###
-GET http://localhost:3001/info
+GET https://hidden-shore-67603.herokuapp.com/info

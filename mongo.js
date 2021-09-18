@@ -13,8 +13,8 @@ const url =
 mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+  name: String,
+  number: String,
 })
 
 // method model is a constructor function,
@@ -24,26 +24,24 @@ const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length === 3) {
 
-    Person.find({}).then(result => {
-        console.log("Phonebook:")
-        result.forEach(person => 
-            console.log(person.name, person.number)
-        )
-        mongoose.connection.close()
-    })
+  Person.find({}).then(result => {
+    console.log('Phonebook:')
+    result.forEach(person => console.log(person.name, person.number))
+    mongoose.connection.close()
+  })
 }
 
 if (process.argv.length === 5) {
 
-    const person = new Person({
-        name: process.argv[3],
-        number: process.argv[4],
-    })
-    
-    // mongoose model-specific method save to db
-    // in promise chain
-    person.save().then(result => {
-        console.log("Added name: ", process.argv[3],", number: ", process.argv[4], " to the phonebook")
-        mongoose.connection.close()
-    })
+  const person = new Person({
+    name: process.argv[3],
+    number: process.argv[4],
+  })
+
+  // mongoose model-specific method save to db
+  // in promise chain
+  person.save().then(() => {
+    console.log('Added name: ', process.argv[3],', number: ', process.argv[4], ' to the phonebook')
+    mongoose.connection.close()
+  })
 }

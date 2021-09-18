@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require('express')
 // create express application
 const app = express()
-// from ./models/person.js, imports our mongoose model, 
+// from ./models/person.js, imports our mongoose model,
 // which represents the persons collection in mongoDB
 // into Person variable
 const Person = require('./models/person')
@@ -28,9 +28,9 @@ app.use(express.json())
 // allow all requests made to this server
 app.use(cors())
 
-// create custom token for logging, here using app.use(express.json()) 
+// create custom token for logging, here using app.use(express.json())
 // to access body from the requests JSON object
-morgan.token('body', function(request, response) {
+morgan.token('body', function(request) {
   return JSON.stringify(request.body, null, 2)
 })
 
@@ -50,16 +50,16 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-    Person
-      .findById(request.params.id)
-      .then(person => {
-        if (person){
-          response.json(person)
-        } else {
-          // correct format but not found
-          response.status(404).end()
-        }
-      })
+  Person
+    .findById(request.params.id)
+    .then(person => {
+      if (person){
+        response.json(person)
+      } else {
+        // correct format but not found
+        response.status(404).end()
+      }
+    })
     // if ID doesn't match the mongo identifier format
     // the promise will return rejected and be caught.
     // no param in next() => continue to next route/middleware
@@ -78,7 +78,7 @@ app.get('/info', (request, response) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  
+
   const person = new Person({
     name: body.name,
     number: body.number
@@ -102,7 +102,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.put("/api/persons/:id", (request, response, next) => {
+app.put('/api/persons/:id', (request, response, next) => {
   // body of the request
   const body = request.body
   // Pass a regular object, with updated values
@@ -111,7 +111,7 @@ app.put("/api/persons/:id", (request, response, next) => {
     number: body.number
   }
 
-  // { new: true } changes the return of findByIdAndUpdate() 
+  // { new: true } changes the return of findByIdAndUpdate()
   // to the updated object rather than the initial query
   // runValidators: true, update validators are off by default
   // specify context: 'query' for access to this
@@ -169,6 +169,4 @@ const errorHandler = (error, request, response, next) => {
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
