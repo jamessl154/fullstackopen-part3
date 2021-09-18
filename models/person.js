@@ -22,10 +22,11 @@ const personSchema = new mongoose.Schema({
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test
   // https://regex101.com/
-  // https://stackoverflow.com/a/5416280
-  // /(\-*\d){8,}/ RegExp matches the capturing group () at least 8 times
-  // The capturing group here is any number of - characters followed by 1 [0-9] character
-  // thus matching our desired at least 8 digits
+  // https://stackoverflow.com/a/50177224
+  // /^([.,\/ -]*\d[.,\/ -]*){8,}$/ RegExp matches a line that contains
+  // the capturing group () at least 8 times and nothing else that that isn't a match.
+  // The group is a [0-9] char that has 0 or more ".,/- " chracters on either side
+  // so 12345678 or -1-2-3-4-5-6-7-8- are accepted e.t.c.
   name: {
     type: String,
     minLength: 3,
@@ -35,12 +36,14 @@ const personSchema = new mongoose.Schema({
   number: {
     type: String,
     required: true,
+    unique: true,
     validate: {
       validator: (v) => {
         // .test() returns true if matches RegExp
-        return /(\-*\d){8,}/.test(v)
+        // v refers to the document
+        return /^([.,\/ -]*\d[.,\/ -]*){8,}$/.test(v)
       },
-      message: "Number must contain at least 8 digits, number can only contain digits and the '-' character"
+      message: "Number must contain at least 8 digits, number can only contain digits and the ' -.,/' characters"
     },
     minlength: 8
   }

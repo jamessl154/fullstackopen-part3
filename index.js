@@ -102,7 +102,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.put("/api/persons/:id", (request, response) => {
+app.put("/api/persons/:id", (request, response, next) => {
   // body of the request
   const body = request.body
   // Pass a regular object, with updated values
@@ -113,8 +113,12 @@ app.put("/api/persons/:id", (request, response) => {
 
   // { new: true } changes the return of findByIdAndUpdate() 
   // to the updated object rather than the initial query
+  // runValidators: true, update validators are off by default
+  // specify context: 'query' for access to this
+  // update validation only runs on updated paths
+  // https://mongoosejs.com/docs/validation.html
   Person
-    .findByIdAndUpdate(request.params.id, person, { new: true })
+    .findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true })
     .then(updatedNumber => {
       response.json(updatedNumber)
     })

@@ -4,21 +4,20 @@ POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "blabla",
-    "number": "21321--------456"
+    "name": "rest",
+    "number": "123213123"
 }
 
 ### Get one
-GET http://localhost:3001/api/persons/61434896ced2784a382bcaf7
+GET http://localhost:3001/api/persons/614480e70b6c9bb673764e2c
 ### Get all
 GET http://localhost:3001/api/persons
 ### Update phone number
-PUT http://localhost:3001/api/persons/61434896ced2784a382bcaf7
+PUT http://localhost:3001/api/persons/614480e70b6c9bb673764e2c
 content-type: application/json
 
 {
-    "name": "some",
-    "number": "456"
+    "number": "1223/456/78"
 }
 
 ###
