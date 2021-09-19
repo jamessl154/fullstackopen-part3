@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 // npm install mongoose-unique-validator
+// which adds unique as a validator that can be used in mongoose schemas
 const uniqueValidator = require('mongoose-unique-validator')
 
 // environment variable
@@ -18,10 +19,9 @@ mongoose.connect(url)
 // these schemas make our collections of documents more structured
 const personSchema = new mongoose.Schema({
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test
   // https://regex101.com/
   // https://stackoverflow.com/a/50177224
-  // /^([.,\/ -]*\d[.,\/ -]*){8,}$/ RegExp matches a line that contains
+  // /^([.,/ -]*\d[.,/ -]*){8,}$/ RegExp matches a line that contains
   // the capturing group () at least 8 times and nothing else that that isn't a match.
   // The group is a [0-9] char that has 0 or more '.,/- ' chracters on either side
   // so 12345678 or -1-2-3-4-5-6-7-8- are accepted e.t.c.
@@ -37,10 +37,12 @@ const personSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (v) => {
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test
         // .test() returns true if matches RegExp
-        // v refers to the document
+        // v refers to the number
         return /^([.,/ -]*\d[.,/ -]*){8,}$/.test(v)
       },
+      // Custom return message
       message: 'Number must contain at least 8 digits, number can only contain digits and the  "-.,/" characters'
     },
     minlength: 8
@@ -52,7 +54,7 @@ personSchema.plugin(uniqueValidator)
 
 // removes default _id and __v, creates .id from __id as a string
 // each person inherits this method from the personSchema. It gets called when
-// the object is converted to JSON
+// any object created from the schema is converted to JSON
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
@@ -63,5 +65,6 @@ personSchema.set('toJSON', {
 
 // The variable assigned mongoose.model becomes a constructor function
 // that creates a new JS object based on params
-// inheriting all properties and methods including save(), find() e.t.c.
+// inheriting all properties and methods of personSchema that inherits
+// from mongoose.Schema including save(), find() e.t.c.
 module.exports = mongoose.model('Person', personSchema)

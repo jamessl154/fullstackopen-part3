@@ -1,5 +1,9 @@
+### Delete a person
+
 DELETE https://hidden-shore-67603.herokuapp.com/api/persons/6145db34cab202c94510d927
-###
+
+### Add a new person
+
 POST https://hidden-shore-67603.herokuapp.com/api/persons
 content-type: application/json
 
@@ -8,17 +12,24 @@ content-type: application/json
     "number": "123213123"
 }
 
-### Get one
+### Get one person
+
 GET https://hidden-shore-67603.herokuapp.com/api/persons/6145db20cab202c94510d91d
-### Get all
+
+### Get all people
+
 GET https://hidden-shore-67603.herokuapp.com/api/persons
-### Update phone number
+
+### Update a person
+
 PUT https://hidden-shore-67603.herokuapp.com/api/persons/6145db20cab202c94510d91d
 content-type: application/json
 
 {
+    "name": "blabla",
     "number": "1223/456/78"
 }
 
-###
+### Get info
+
 GET https://hidden-shore-67603.herokuapp.com/info

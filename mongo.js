@@ -8,7 +8,7 @@ if (process.argv.length < 3) {
 const password = process.argv[2]
 
 const url =
-`mongodb+srv://James:${password}@cluster0.1rbrw.mongodb.net/phonebook-db?retryWrites=true&w=majority`
+`mongodb+srv://James:${password}@cluster0.1rbrw.mongodb.net/phonebook-db?retryWrites=true`
 
 mongoose.connect(url)
 
@@ -35,7 +35,7 @@ if (process.argv.length === 5) {
 
   const person = new Person({
     name: process.argv[3],
-    number: process.argv[4],
+    number: process.argv[4]
   })
 
   // mongoose model-specific method save to db

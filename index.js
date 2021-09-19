@@ -1,3 +1,4 @@
+// https://github.com/motdotla/dotenv#readme
 require('dotenv').config()
 // Import express module
 const express = require('express')
@@ -5,7 +6,8 @@ const express = require('express')
 const app = express()
 // from ./models/person.js, imports our mongoose model,
 // which represents the persons collection in mongoDB
-// into Person variable
+// into Person variable, the model is a constructor function
+// from which we can make objects that are then mapped as documents to mongoDB
 const Person = require('./models/person')
 
 const morgan = require('morgan')
@@ -14,7 +16,7 @@ const cors = require('cors')
 /// MIDDLEWARE order is important
 
 // Middleware, serves static files in this case the build copied
-// from our frontend repository
+// from our frontend repository to '/index.html' or '/'
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static('build'))
 
@@ -29,7 +31,7 @@ app.use(express.json())
 app.use(cors())
 
 // create custom token for logging, here using app.use(express.json())
-// to access body from the requests JSON object
+// to access body from the requests JSON object and logging it
 morgan.token('body', function(request) {
   return JSON.stringify(request.body, null, 2)
 })
@@ -77,6 +79,7 @@ app.get('/info', (request, response) => {
 })
 
 app.post('/api/persons', (request, response, next) => {
+
   const body = request.body
 
   const person = new Person({
@@ -96,6 +99,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   Person
     .findByIdAndRemove(request.params.id)
     .then(result => {
+      // Prints what was deleted to console
       console.log(result)
       response.status(204).end()
     })
@@ -122,7 +126,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     .then(updatedNumber => {
       // The server responds 200 null when updating non-existent resources
       // which is not ideal for error checking on the frontend
-      // null is falsy and evaluates to false
+      // if null, null is falsy and evaluates to false
       if (updatedNumber) {
         response.json(updatedNumber)
       } else {
@@ -133,18 +137,17 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-/// ENDING MIDDLEWARE order important
+/// ENDING MIDDLEWARE
 
-// custom Middleware
-// just a function that has access to the request/response objects and next()
+// custom Middleware just a function that has access
+// to the request/response objects and next()
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
-
 // If a request doesn't match any of the
 // HTTP method/route combinations defined above
 // this middleware gets called
-// and terminates the request-response cycle
+// which terminates the request-response cycle
 // by calling res.send()
 // https://expressjs.com/en/guide/routing.html
 
@@ -156,6 +159,7 @@ const errorHandler = (error, request, response, next) => {
 
   console.error(error.message)
 
+  // errors passed by next(error)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
@@ -165,7 +169,7 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-// this has to be the last loaded middleware.
+// this has to be the last loaded middleware
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
